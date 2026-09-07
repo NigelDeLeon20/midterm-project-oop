@@ -15,10 +15,10 @@ public class Main {
                 if (value >= min && value <= max){
                     return value;
                 } else {
-                    System.out.print("ERROR: Invalid input. please input a number (1-9) ");
+                    System.out.printf("ERROR: Invalid input. Please enter a number (%d-%d).%n", min, max);
                 } 
             } catch (NumberFormatException e){
-                System.out.println("ERROR: Invalid input. please input a number (1-9) ");
+                System.out.printf("ERROR: Invalid input. Please enter a number (%d-%d).%n", min, max);
             }
         } 
         throw new IllegalStateException("Menu input loop ended unexpectedly.");
@@ -52,7 +52,7 @@ public class Main {
                 return value;
 
             } catch (NumberFormatException e){
-                System.out.println("ERROR: Invalid input. Please enter a valid number.");
+                System.out.println("ERROR: Quantity must be 1-1000. Please try again.");
             }
         }
     }
@@ -138,9 +138,9 @@ public class Main {
 
     private static void printMenu() {
         System.out.println("\n--------------------------------");
-        System.out.println("INVENTORY MANAGEMENT SYSTEM");
+        System.out.println("  INVENTORY MANAGEMENT SYSTEM");
         System.out.println("--------------------------------");
-        System.out.print("1. Add Item \n2. Update Item \n3.Remove Item \n4.Display Items \n5.Display All Items \n6.Search Item \n7.Sort Item \n8.Display Low Stock \n9.Exit \nEnter input: ");
+        System.out.print("1. Add Item \n2. Update Item \n3. Remove Item \n4. Display Items \n5. Display All Items \n6. Search Item \n7. Sort Item \n8. Display Low Stock \n9. Exit \nEnter input: ");
     }
 
     private static void addItem(){
@@ -148,7 +148,7 @@ public class Main {
         System.out.println("            ADD ITEM");
         System.out.println("--------------------------------");
 
-        System.out.println("Categories: \n" + String.join("\n,", inventory.getValidCategories()));
+        System.out.println("Categories: \n- " + String.join("\n- ", inventory.getValidCategories()));
         String category = readValidCategory("Enter category: ");
         String id = readUniqueItemId("Enter item ID: ");
 
@@ -235,8 +235,7 @@ public class Main {
     //Displaying items by category
     private static void displayByCategory() {
         System.out.println("\n-- DISPLAY ITEMS BY CATEGORY --");
-        String category = readValidCategory("Enter Category: ");
-
+        String category = readValidCategory("Enter Category (Clothing, Electronics, Entertainment): ");
         List<Item> list = inventory.getItemsCategory(category);
         if (list.isEmpty()) {
             System.out.println("Category " + category + " does not exist!");
@@ -280,7 +279,7 @@ public class Main {
         double totalValue = item.getQuantity() * item.getPrice();
 
         System.out.println("\n================================");
-        System.out.println("          ITEM RECEIPT");
+        System.out.println("          ITEM INFORMATION");
         System.out.println("================================");
         System.out.println("Item ID:     " + item.getId());
         System.out.println("Item Name:   " + item.getName());

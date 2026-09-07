@@ -12,7 +12,7 @@ class Inventory {
         items = new ArrayList<>();
     }
 
-    // ---------- Helper: category validation ----------
+    // validation for category
     public boolean isValidCategory(String category) {
         if (category == null) {
             return false;
@@ -29,7 +29,7 @@ class Inventory {
         return Arrays.copyOf(VALID_CATEGORIES, VALID_CATEGORIES.length);
     }
 
-    // ---------- Helper: check duplicate ID ----------
+    // Check if id has duplicates
     public boolean idExist(String id) {
         return findItemById(id) != null;
     }
@@ -46,7 +46,7 @@ class Inventory {
         return null;
     }
 
-    // ---------- ADD ITEM ----------
+    // Adding Item
     public boolean addItem(String category, String id, String name, int quantity, double price) {
         if (!isValidCategory(category) || id == null || !id.matches("^[A-Za-z]{3}-\\d{4}$")
                 || idExist(id) || name == null || name.trim().isEmpty()
@@ -71,8 +71,7 @@ class Inventory {
         return true;
     }
 
-    // ---------- UPDATE ITEM ----------
-    // Returns an Object[] { success(boolean), oldValue, newValue, item }
+    // Update item
     public Item getItemForUpdate(String id) {
         return findItemById(id);
     }
@@ -91,7 +90,7 @@ class Inventory {
         item.setPrice(newPrice);
     }
 
-    // ---------- REMOVE ITEM ----------
+    // deleting item
     public Item removeItem(String id) {
         Item item = findItemById(id);
         if (item != null) {
@@ -100,12 +99,12 @@ class Inventory {
         return item;
     }
 
-    // ---------- SEARCH ITEM ----------
+    // Searching for an item using ID
     public Item searchItem(String id) {
         return findItemById(id);
     }
 
-    // ---------- DISPLAY BY CATEGORY ----------
+    // Display items by category
     public List<Item> getItemsCategory(String category) {
         List<Item> result = new ArrayList<>();
         if (category == null) {
@@ -119,12 +118,12 @@ class Inventory {
         return result;
     }
 
-    // ---------- DISPLAY ALL ----------
+    // Display all items
     public List<Item> getALLItems() {
         return new ArrayList<>(items); // returns a copy -> protects internal list
     }
 
-    // ---------- SORT ----------
+    // Sorting items by quanity or price and in ascending or descending order
     public List<Item> sortItems(String sortBy, String order) {
         if (sortBy == null || (!sortBy.equalsIgnoreCase("quantity") && !sortBy.equalsIgnoreCase("price"))) {
             throw new IllegalArgumentException("ERROR: Sort field must be quantity or price.");
@@ -147,7 +146,7 @@ class Inventory {
         return sorted;
     }
 
-    // ---------- LOW STOCK ----------
+    //If item is low in stock
     public List<Item> getLowStockItems() {
         List<Item> lowStock = new ArrayList<>();
         for (Item item : items) {
