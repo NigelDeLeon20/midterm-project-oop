@@ -2,8 +2,6 @@ import java.util.*;
 
 class Inventory {
 
-    // The list itself is private. Outside classes cannot touch it directly;
-    // they must go through the public methods below.
     private final List<Item> items;
     private static final int LOW_STOCK_INDICATOR = 10;
     private static final String[] VALID_CATEGORIES = {"Clothing", "Electronics", "Entertainment"};
@@ -120,7 +118,7 @@ class Inventory {
 
     // Display all items
     public List<Item> getALLItems() {
-        return new ArrayList<>(items); // returns a copy -> protects internal list
+        return new ArrayList<>(items); 
     }
 
     // Sorting items by quanity or price and in ascending or descending order

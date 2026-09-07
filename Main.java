@@ -77,30 +77,21 @@ public class Main {
     }
 
     private static boolean confirmChange(String prompt) {
-        boolean a = true;
-        while (a) {
-            String answer = readNonEmptyString(prompt + " (yes/no): ");
-            if (answer.equalsIgnoreCase("yes")) {
-                return true;
-            }
-            if (answer.equalsIgnoreCase("no")) {
-                return false;
-            }
-            System.out.println("ERROR: Please enter yes or no.");
-        }
-        throw new IllegalStateException("Confirmation loop ended unexpectedly.");
+        System.out.println(prompt);
+        System.out.println("1. Yes");
+        System.out.println("2. No");
+        System.out.print("Enter choice: ");
+        return readMenuChoice(1, 2) == 1;
     }
 
     private static String readValidCategory(String prompt) {
-        boolean a = true;
-        while (a) {
-            String category = readNonEmptyString(prompt);
-            if (inventory.isValidCategory(category)) {
-                return category;
-            }
-            System.out.println("ERROR: Category is not available. Please try again.");
+        String[] categories = inventory.getValidCategories();
+        System.out.println(prompt);
+        for (int index = 0; index < categories.length; index++) {
+            System.out.println((index + 1) + ". " + categories[index]);
         }
-        throw new IllegalStateException("Category input loop ended unexpectedly.");
+        System.out.print("Enter choice: ");
+        return categories[readMenuChoice(1, categories.length) - 1];
     }
 
     private static String readUniqueItemId(String prompt) {
@@ -148,8 +139,7 @@ public class Main {
         System.out.println("            ADD ITEM");
         System.out.println("--------------------------------");
 
-        System.out.println("Categories: \n- " + String.join("\n- ", inventory.getValidCategories()));
-        String category = readValidCategory("Enter category: ");
+        String category = readValidCategory("Select category:");
         String id = readUniqueItemId("Enter item ID: ");
 
         String name = readNonEmptyString("Enter item name: ");
@@ -173,18 +163,13 @@ public class Main {
         String id = readExistingItemId("Enter item ID to update: ");
         Item item = inventory.getItemForUpdate(id);
 
-        String field = "";
-        boolean a = true;
+        System.out.println("Update item:");
+        System.out.println("1. Quantity");
+        System.out.println("2. Price");
+        System.out.print("Enter choice: ");
+        int fieldChoice = readMenuChoice(1, 2);
 
-        while(a){
-            field = readNonEmptyString("Update item (quantity/price): ");
-            if (field.equalsIgnoreCase("quantity") || field.equalsIgnoreCase("price")){
-                break;
-            } 
-            System.out.println("ERROR: Invalid field. Please enter 'quantity' or 'price'.");
-        }
-
-        if (field.equalsIgnoreCase("quantity")){
+        if (fieldChoice == 1){
             int oldValue = item.getQuantity();
             int newValue = readValidInt("Enter new quantity: ");
 
@@ -235,10 +220,10 @@ public class Main {
     //Displaying items by category
     private static void displayByCategory() {
         System.out.println("\n-- DISPLAY ITEMS BY CATEGORY --");
-        String category = readValidCategory("Enter Category (Clothing, Electronics, Entertainment): ");
+        String category = readValidCategory("Select category:");
         List<Item> list = inventory.getItemsCategory(category);
         if (list.isEmpty()) {
-            System.out.println("Category " + category + " does not exist!");
+            System.out.println("No items found in category " + category + ".");
             return;
         }
 
