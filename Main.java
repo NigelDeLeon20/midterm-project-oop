@@ -336,7 +336,7 @@ public class Main {
 
         printTableHeaderWithCategory();
         for (Item item : lowStock) {
-            System.out.println(item.withCategoryTable());
+            System.out.println(item.withCategoryTable());       
         }
         printTableFooterWithCategory();
     }

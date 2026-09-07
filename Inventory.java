@@ -5,7 +5,7 @@ class Inventory {
     // The list itself is private. Outside classes cannot touch it directly;
     // they must go through the public methods below.
     private final List<Item> items;
-    private static final int lowStockIndicator = 5;
+    private static final int LOW_STOCK_INDICATOR = 10;
     private static final String[] VALID_CATEGORIES = {"Clothing", "Electronics", "Entertainment"};
 
     public Inventory() {
@@ -14,6 +14,9 @@ class Inventory {
 
     // ---------- Helper: category validation ----------
     public boolean isValidCategory(String category) {
+        if (category == null) {
+            return false;
+        }
         for (String c : VALID_CATEGORIES) {
             if (c.equalsIgnoreCase(category)) {
                 return true;
@@ -23,7 +26,7 @@ class Inventory {
     }
 
     public String[] getValidCategories() {
-        return VALID_CATEGORIES;
+        return Arrays.copyOf(VALID_CATEGORIES, VALID_CATEGORIES.length);
     }
 
     // ---------- Helper: check duplicate ID ----------
@@ -32,6 +35,9 @@ class Inventory {
     }
 
     private Item findItemById(String id) {
+        if (id == null) {
+            return null;
+        }
         for (Item item : items) {
             if (item.getId().equalsIgnoreCase(id)) {
                 return item;
@@ -42,11 +48,13 @@ class Inventory {
 
     // ---------- ADD ITEM ----------
     public boolean addItem(String category, String id, String name, int quantity, double price) {
-        if (!isValidCategory(category)) {
+        if (!isValidCategory(category) || id == null || !id.matches("^[A-Za-z]{3}-\\d{4}$")
+                || idExist(id) || name == null || name.trim().isEmpty()
+                || quantity < 1 || quantity > 1000 || !Double.isFinite(price) || price < 1 || price > 20000) {
             return false; 
         }
         Item newItem;
-        switch (category.toLowerCase()) {
+        switch (category.toLowerCase(Locale.ROOT)) {
             case "clothing":
                 newItem = new Item.Clothing(id, name, quantity, price);
                 break;
@@ -70,10 +78,16 @@ class Inventory {
     }
 
     public void updateQuantity(Item item, int newQuantity) {
+        if (item == null) {
+            throw new IllegalArgumentException("ERROR: Item cannot be empty.");
+        }
         item.setQuantity(newQuantity);
     }
 
     public void updatePrice(Item item, double newPrice) {
+        if (item == null) {
+            throw new IllegalArgumentException("ERROR: Item cannot be empty.");
+        }
         item.setPrice(newPrice);
     }
 
@@ -94,6 +108,9 @@ class Inventory {
     // ---------- DISPLAY BY CATEGORY ----------
     public List<Item> getItemsCategory(String category) {
         List<Item> result = new ArrayList<>();
+        if (category == null) {
+            return result;
+        }
         for (Item item : items) {
             if (item.getCategory().equalsIgnoreCase(category)) {
                 result.add(item);
@@ -109,6 +126,12 @@ class Inventory {
 
     // ---------- SORT ----------
     public List<Item> sortItems(String sortBy, String order) {
+        if (sortBy == null || (!sortBy.equalsIgnoreCase("quantity") && !sortBy.equalsIgnoreCase("price"))) {
+            throw new IllegalArgumentException("ERROR: Sort field must be quantity or price.");
+        }
+        if (order == null || (!order.equalsIgnoreCase("ascending") && !order.equalsIgnoreCase("descending"))) {
+            throw new IllegalArgumentException("ERROR: Sort order must be ascending or descending.");
+        }
         List<Item> sorted = new ArrayList<>(items);
 
         sorted.sort((a, b) -> {
@@ -128,7 +151,7 @@ class Inventory {
     public List<Item> getLowStockItems() {
         List<Item> lowStock = new ArrayList<>();
         for (Item item : items) {
-            if (item.getQuantity() <= lowStockIndicator) {
+            if (item.getQuantity() < LOW_STOCK_INDICATOR) {
                 lowStock.add(item);
             }
         }

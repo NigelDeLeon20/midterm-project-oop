@@ -6,8 +6,11 @@ public abstract class Item {
 
     //Constructor for Item
     public Item(String id, String name, int quantity, double price) {
-        this.id = id;
-        this.name = name;
+        if (id == null || !id.matches("^[A-Za-z]{3}-\\d{4}$")) {
+            throw new IllegalArgumentException("ERROR: Item ID must use the format ABC-1234.");
+        }
+        this.id = id.toUpperCase(java.util.Locale.ROOT);
+        setName(name);
         setQuantity(quantity);
         setPrice(price);
     }
@@ -28,10 +31,10 @@ public abstract class Item {
 
     //Setters and validations for name, quantity, and price
     public void setName(String name){
-        if (name != null && !name.isEmpty()) {
-            throw new IllegalArgumentException("ERROR: Input valid Name.");
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("ERROR: Name cannot be empty.");
         }
-        this.name = name;
+        this.name = name.trim();
     }
     public void setQuantity(int quantity){
         if (quantity < 1 || quantity > 1000) {
